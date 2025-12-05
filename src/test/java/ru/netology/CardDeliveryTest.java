@@ -21,6 +21,12 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class CardDeliveryTest {
 
+    public static String shouldGenerateDate(int daysToAdd, String pattern) {
+        LocalDate date = LocalDate.now().plusDays(daysToAdd);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        return date.format(formatter);
+    }
+
 
     @BeforeEach
     void setup() {
@@ -32,11 +38,9 @@ public class CardDeliveryTest {
     @Test
     void shouldRegisterApplication() {
 
-        LocalDate Date = LocalDate.now().plusDays(3);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        String date = Date.format(formatter);
-
         SelenideElement form = $("form");
+
+        String date = shouldGenerateDate(3, "dd.MM.yyyy");
 
         form.$("[data-test-id='city'] input").setValue("Екатеринбург");
         form.$("[data-test-id='date'] input").doubleClick().sendKeys(Keys.BACK_SPACE);
@@ -46,8 +50,16 @@ public class CardDeliveryTest {
         form.$("[data-test-id='phone'] input").setValue("+79251234567");
         form.$("[data-test-id='agreement']").click();
         form.$$("button").find(text("Забронировать")).click();
-        $(Selectors.withText("Успешно!")).should(Condition.visible, Duration.ofSeconds(15));
+
+        SelenideElement successMessage = $("[data-test-id='notification'] .notification__title");
+        successMessage.shouldBe(Condition.visible, Duration.ofSeconds(15));
+        successMessage.shouldHave(Condition.exactText("Успешно!"));
+
+        SelenideElement meetingDate = $("[data-test-id='notification'] .notification__content");
+        meetingDate.shouldBe(Condition.visible, Duration.ofSeconds(15));
+        meetingDate.shouldHave(Condition.exactText("Встреча успешно забронирована на " + date));
     }
+
 
 //    Задача 2
 
