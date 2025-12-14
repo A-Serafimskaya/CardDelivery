@@ -81,7 +81,7 @@ public class CardDeliveryTest {
 
             $(".calendar__arrow").click();
 
-
+        }
             $$(".calendar__layout").find(Condition.text(shouldGenerateDate(7, "d"))).click();
             form.$("[data-test-id='name'] input").setValue("Иванов-Петров Петр");
             form.$("[data-test-id='phone'] input").setValue("+79251234567");
@@ -97,7 +97,7 @@ public class CardDeliveryTest {
             meetingDate.shouldHave(Condition.exactText("Встреча успешно забронирована на " + date));
         }
     }
-}
+
 
 
 
