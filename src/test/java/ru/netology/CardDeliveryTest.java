@@ -68,7 +68,7 @@ public class CardDeliveryTest {
     void testAutoFil() {
 
         SelenideElement form = $("form");
-        String date = shouldGenerateDate(4, "dd.MM.yyyy");
+        String date = shouldGenerateDate(7, "dd.MM.yyyy");
 
         form.$("[data-test-id='city'] input").setValue("Ек");
 
@@ -78,25 +78,23 @@ public class CardDeliveryTest {
         form.$("[data-test-id='date'] input").click();
 
         if (!shouldGenerateDate(3, "MM").equals(shouldGenerateDate(7, "MM"))) {
-
             $(".calendar__arrow").click();
-
         }
-            $$(".calendar__layout").find(Condition.text(shouldGenerateDate(7, "d"))).click();
-            form.$("[data-test-id='name'] input").setValue("Иванов-Петров Петр");
-            form.$("[data-test-id='phone'] input").setValue("+79251234567");
-            form.$("[data-test-id='agreement']").click();
-            form.$$("button").find(text("Забронировать")).click();
+        $$(".calendar__day").find(Condition.text(shouldGenerateDate(7, "d"))).click();
+        form.$("[data-test-id='name'] input").setValue("Иванов-Петров Петр");
+        form.$("[data-test-id='phone'] input").setValue("+79251234567");
+        form.$("[data-test-id='agreement']").click();
+        form.$$("button").find(text("Забронировать")).click();
 
-            SelenideElement successMessage = $("[data-test-id='notification'] .notification__title");
-            successMessage.shouldBe(Condition.visible, Duration.ofSeconds(15));
-            successMessage.shouldHave(Condition.exactText("Успешно!"));
+        SelenideElement successMessage = $("[data-test-id='notification'] .notification__title");
+        successMessage.shouldBe(Condition.visible, Duration.ofSeconds(15));
+        successMessage.shouldHave(Condition.exactText("Успешно!"));
 
-            SelenideElement meetingDate = $("[data-test-id='notification'] .notification__content");
-            meetingDate.shouldBe(Condition.visible, Duration.ofSeconds(15));
-            meetingDate.shouldHave(Condition.exactText("Встреча успешно забронирована на " + date));
-        }
+        SelenideElement meetingDate = $("[data-test-id='notification'] .notification__content");
+        meetingDate.shouldBe(Condition.visible, Duration.ofSeconds(15));
+        meetingDate.shouldHave(Condition.exactText("Встреча успешно забронирована на " + date));
     }
+}
 
 
 
